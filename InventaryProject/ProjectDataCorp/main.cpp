@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include "Item.h"
 #include "Inventory.h"
 
@@ -7,13 +7,15 @@ int main() {
     std::string input;
 
 
+    // adding new items
+    ///////
     while (true) {
-        std::cout << "Enter item name (or 'enough' to stop): ";
-        std::getline(std::cin, input);
+        std::cout << "Enter item name (or 'enough' to stop): "; //key word enough breaks the function for adding new products 
+        std::getline(std::cin, input);                          // so user can continue his work with the next functions
         if (input == "enough") break;
         std::string name = input;
 
-        std::cout << "Enter quantity: ";
+        std::cout << "Enter quantity: ";    
         int quantity;
         std::cin >> quantity;
 
@@ -21,18 +23,18 @@ int main() {
         double price;
         std::cin >> price;
 
-        std::cin.ignore(); // Игнорирайте новия ред след въвеждането на числата
+        std::cin.ignore(); 
 
         std::cout << "Enter supplier: ";
         std::getline(std::cin, input);
         std::string supplier = input;
 
-        static int id_counter = 1; // За генериране на уникален ID
+        static int id_counter = 1; // the coutner starts from 1
         inventory.addItem(name, id_counter++, quantity, price, supplier);
     }
 
     std::cout << "Current inventory:" << std::endl;
-    inventory.generateReport();
+    inventory.generateReport(); // generating report, cuse i want the ID of the products to be visible for the next operations
 
     
 
@@ -41,16 +43,18 @@ int main() {
     //////////////// update
 
     while (true) {
-        std::cout << "Enter item ID to update (or '0' to exit): ";
+        std::cout << "Enter item ID to update (or '0' to exit): ";          // '0' to break the function and procceed
         int id;
         std::cin >> id;
         if (id == 0) break;
-        inventory.updateItemAttribute(id);
+        inventory.updateItemAttribute(id);  //update product with the taken ID
 
         std::cout << "Updated inventory:" << std::endl;
-        inventory.generateReport();
+        inventory.generateReport();     //new report to check the updated info
     }
 
+
+    //deleting
     ///////////
 
     while (true) {
@@ -60,19 +64,19 @@ int main() {
 
         if (choice == "no") break;
 
-        std::cout << "Enter item ID to delete (or '0' to skip): ";
+        std::cout << "Enter item ID to delete (or '0' to skip): ";  //deleting byID
         int id;
         std::cin >> id;
         if (id != 0) {
-            inventory.deleteItemById(id);
+            inventory.deleteItemById(id);   //calls funciton deleteByID
         }
         else {
-            std::cin.ignore(); // Игнорирайте новия ред
+            std::cin.ignore();
         }
 
-        std::cin.ignore(); // Игнорирайте новия ред след въвеждането на числата
+        std::cin.ignore();
 
-        std::cout << "Enter item name to delete (or 'none' to skip): ";
+        std::cout << "Enter item name to delete (or 'none' to skip): "; //deleting by name
         std::string name;
         std::getline(std::cin, name);
         if (name != "none") {
@@ -80,12 +84,14 @@ int main() {
         }
 
         std::cout << "Inventory after deletion:" << std::endl;
-        inventory.generateReport();
+        inventory.generateReport();     // new report to check if the item is deleted
     }
 
-    ////////////////////////////
 
-    
+
+
+    //searching
+    ////////////////////////////
 
     while (true) {
         std::cout << "Do you want to search for an item? (yes/no): ";
@@ -98,13 +104,13 @@ int main() {
         std::string criterion;
         std::cin >> criterion;
 
-        if (criterion == "Name") {
+        if (criterion == "Name") {      //searching with Name
             std::cout << "Enter name: ";
             std::cin.ignore();
             std::getline(std::cin, input);
-            Item* item = inventory.searchItemByName(input);
+            Item* item = inventory.searchItemByName(input); //checks if the inputed info is found in the massive
             if (item) {
-                std::cout << "Found item - ID: " << item->getId()
+                std::cout << "Found item - ID: " << item->getId()   //if found the info about the item is displayed on the console
                     << ", Name: " << item->getName()
                     << ", Quantity: " << item->getQuantity()
                     << ", Price: " << item->getPrice()
@@ -115,11 +121,11 @@ int main() {
                 std::cout << "Item not found." << std::endl;
             }
         }
-        else if (criterion == "ID") {
+        else if (criterion == "ID") {       //search by ID
             std::cout << "Enter ID: ";
             int id;
             std::cin >> id;
-            Item* item = inventory.searchItemById(id);
+            Item* item = inventory.searchItemById(id);          //if found the info about the item is displayed on the console
             if (item) {
                 std::cout << "Found item - ID: " << item->getId()
                     << ", Name: " << item->getName()
@@ -132,11 +138,11 @@ int main() {
                 std::cout << "Item not found." << std::endl;
             }
         }
-        else if (criterion == "Quantity") {
+        else if (criterion == "Quantity") {     //search by qunatity
             std::cout << "Enter quantity: ";
             int quantity;
             std::cin >> quantity;
-            std::vector<Item> items = inventory.searchItemsByQuantity(quantity);
+            std::vector<Item> items = inventory.searchItemsByQuantity(quantity);        //if found the info about the item is displayed on the console
             if (!items.empty()) {
                 for (const auto& item : items) {
                     std::cout << "ID: " << item.getId()
@@ -151,11 +157,11 @@ int main() {
                 std::cout << "No items found with the specified quantity." << std::endl;
             }
         }
-        else if (criterion == "Supplier") {
+        else if (criterion == "Supplier") {         //searching by supplier
             std::cout << "Enter supplier: ";
             std::cin.ignore();
             std::getline(std::cin, input);
-            std::vector<Item> items = inventory.searchItemsBySupplier(input);
+            std::vector<Item> items = inventory.searchItemsBySupplier(input);   //if found the info about the item is displayed on the console
             if (!items.empty()) {
                 for (const auto& item : items) {
                     std::cout << "ID: " << item.getId()
@@ -179,8 +185,8 @@ int main() {
         //////////////////////////////
 
         while (true) {
-            std::cout << "Do you want to sort the inventory? (yes/no): ";
-            std::string choice;
+            std::cout << "Do you want to sort the inventory? (yes/no): ";       //nothing speacial to add here
+            std::string choice;                                                 // jsut the program call function sortItems and generates report
             std::cin >> choice;
 
             if (choice == "no") break;
@@ -206,9 +212,9 @@ int main() {
             std::cin >> option;
 
             if (option == 1 || option == 2) {
-                inventory.generateReportByQuantity(option);
-            }
-            else if (option == 3) {
+                inventory.generateReportByQuantity(option);         //based on the option 1 or 2 the program displays info
+            }                                                       //about items with <10 or >50 quantity
+            else if (option == 3) {                                 //if the option is 3 the program shows items suggested for promotion
                 inventory.generatePromotionReport();
             }
 
